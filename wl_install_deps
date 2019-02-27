@@ -1,0 +1,7 @@
+#!/bin/bash
+sudo swupd bundle-add git os-cloudguest-azure vim dev-utils-dev weston-extras devpkg-libdrm
+sudo swupd bundle-add desktop-dev
+sudo swupd bundle-add os-utils-gui os-utils-gui-dev os-core
+sudo swupd bundle-add software-defined-cockpit
+sudo swupd bundle-add llvm
+sudo pip install mako

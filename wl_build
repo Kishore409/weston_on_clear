@@ -1,0 +1,128 @@
+#!/bin/bash
+#Authored by Kishore Kadiyala
+
+. ~/build/wl_defines.sh
+
+if [ ! -e $WLROOT ]; then
+    exit 1
+fi
+
+
+#################Clone STUFF###############
+clone_or_update() {
+    repo=$1
+    dest=$2
+
+    cd ${WLROOT}
+    if [ $? != 0 ]; then
+        echo "Error: Could not cd to ${WLROOT}.  Does it exist?"
+        exit 1
+    fi
+    echo
+    echo $dest
+    if [ ! -d ${dest} ]; then
+        git clone ${repo} ${dest}
+        if [ $? != 0 ]; then
+            echo "Error: Could not clone repository"
+            exit 1
+        fi
+    fi
+    cd ${dest}
+    git checkout master
+    if [ $? != 0 ]; then
+        echo "Error: Problem checking out master"
+        exit 1
+    fi
+    git pull
+    if [ $? != 0 ]; then
+        echo "Error: Could not pull from upstream"
+        exit 1
+    fi
+    cd ${WLROOT}
+}
+
+clone_or_update https://anongit.freedesktop.org/git/wayland/wayland.git wayland
+clone_or_update https://anongit.freedesktop.org/git/wayland/wayland-protocols.git wayland-protocols
+clone_or_update https://anongit.freedesktop.org/git/mesa/drm.git drm
+clone_or_update https://anongit.freedesktop.org/git/mesa/mesa.git mesa
+clone_or_update https://github.com/libunwind/libunwind libunwind
+clone_or_update https://anongit.freedesktop.org/git/libevdev.git libevdev
+clone_or_update https://anongit.freedesktop.org/git/wayland/libinput.git libinput
+clone_or_update https://anongit.freedesktop.org/git/wayland/weston.git weston
+
+
+###################BUILD STUFF##############
+
+# Bail if errors
+set -e
+
+gen() {
+	pkg=$1
+	shift
+	echo
+	echo $pkg
+	cd $WLROOT/$pkg
+	echo "./autogen.sh --prefix=$WLD $*"
+	./autogen.sh --prefix=$WLD $*
+}
+
+compile() {
+	make -j9 && make install
+	if [ $? != 0 ]; then
+		echo "Build Error.  Terminating"
+		exit
+	fi
+}
+
+
+mkdir -p $WLD/share/aclocal
+
+gen wayland
+compile
+
+gen wayland-protocols
+compile
+
+gen drm 
+compile
+
+
+echo
+echo "mesa"
+cd $WLROOT/mesa
+git clean -xfd
+mkdir ./build
+meson --prefix=$WLD -Ddri-driver=i965 -Dgallium-drivers="" -Dvulkan-drivers="" -Dplatforms="wayland,drm,x11" build
+ninja -C build
+ninja -C build install
+
+
+gen libunwind
+compile
+
+gen libevdev
+compile
+
+cd $WLROOT/libinput
+git clean -xfd
+mkdir ./build
+meson --prefix=$WLD -Dlibwacom=false -Ddocumentation=false -Ddebug-gui=false -Dtests=false build
+ninja -C build
+ninja -C build install
+
+echo
+echo "weston"
+cd $WLROOT/weston
+git clean -xfd
+mkdir ./build
+meson --prefix=$WLD -Dsimple-dmabuf-drm=intel build
+ninja -C build
+ninja -C build install
+
+
+# Set up config file if it isn't there already
+if [ ! -e $HOME/.config/weston.ini ]; then
+	cp weston.ini $HOME/.config/
+fi
+
+cd $WLROOT
