@@ -1,7 +1,65 @@
 #!/bin/bash
-sudo swupd bundle-add git os-cloudguest-azure vim dev-utils-dev weston-extras devpkg-libdrm
-sudo swupd bundle-add desktop-dev
-sudo swupd bundle-add os-utils-gui os-utils-gui-dev os-core
-sudo swupd bundle-add software-defined-cockpit
-sudo swupd bundle-add llvm
-sudo pip install mako
+
+if [ -f /etc/os-release ]; then
+    . /etc/os-release
+    OS=$NAME
+    VER=$VERSION_ID
+fi
+
+if [ "$OS" == "Ubuntu" ]; then
+
+    echo "test-------------------------------1"
+    # generic build dependencies for ubuntu
+    sudo apt-get -y install autoconf automake bison debhelper dpkg-dev flex
+    sudo apt-get -y install pkg-config quilt python-libxml2
+
+    # wayland/weston specific stuff
+    sudo apt-get -y install xmlto
+    sudo apt-get -y install doxygen
+    sudo apt-get -y install graphviz
+    sudo apt-get -y install linux-libc-dev
+    sudo apt-get -y install libexpat1-dev
+    sudo apt-get -y install libmtdev-dev
+    sudo apt-get -y install libpam0g-dev
+    sudo apt-get -y install libunwind8-dev
+    sudo apt-get -y install libpciaccess-dev
+    sudo apt-get -y install libudev-dev
+    sudo apt-get -y install llvm-dev
+    sudo apt-get -y install python-mako
+
+    sudo apt-get -y  install xutils-dev
+    sudo apt-get -y  install python3-pip
+
+    sudo pip3 install --upgrade meson
+    sudo pip install --upgrade pip
+
+    sudo apt-get -y install libgbm-dev
+    sudo apt-get -y install libva-dev
+    sudo apt-get -y install libfreerdp-dev
+    sudo apt-get -y install liblcms2-dev
+    sudo apt-get -y install libcolord-dev
+
+    if [[ `lsb_release -rs` < "18.04" ]]; then
+    echo "test-------------------------------3"
+    sudo add-apt-repository ppa:remmina-ppa-team/freerdp-daily
+    sudo apt-get update
+    fi
+
+    sudo apt-get -y install  freerdp2-dev
+
+
+elif [ "$OS" == "Clear Linux OS" ]; then
+
+    echo "test-------------------------------2"
+    sudo swupd bundle-add git os-cloudguest-azure vim dev-utils-dev weston-extras devpkg-libdrm
+    sudo swupd bundle-add desktop-dev
+    sudo swupd bundle-add os-utils-gui os-utils-gui-dev os-core
+    sudo swupd bundle-add software-defined-cockpit
+    sudo swupd bundle-add llvm
+    sudo pip install mako
+
+else
+    echo "-------------------------------------------------------"
+    echo "Unkown Linux Distribution: Add support for dependencies"
+    echo "-------------------------------------------------------"
+fi
