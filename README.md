@@ -5,6 +5,7 @@ Setup:
     mkdir -p $HOME/build/Wayland ;
 On Clearlinux
     copy wl_build, wl_install_deps, wl_defines.sh to "$HOME/build" 
+    
 On Ubuntu:
     copy wl_build, wl_install_deps, wl_defines.sh to "$HOME/build/Wayland" 
 
