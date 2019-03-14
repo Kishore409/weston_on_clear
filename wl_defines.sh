@@ -3,7 +3,7 @@
 export WLROOT=$HOME/build/Wayland
 export WLD=$WLROOT/install   # change this to another location if you prefer
 export LD_LIBRARY_PATH=$WLD/lib
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/kkadiyal/build/Wayland/install/lib64:/home/kkadiyal/build/Wayland/install/lib/x86_64-linux-gnu
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$WLD/lib64:$WLD/lib/x86_64-linux-gnu
 export PKG_CONFIG_PATH=$WLD/lib/pkgconfig/:$WLD/share/pkgconfig/
 export PATH=$WLD/bin:$PATH
 export ACLOCAL_PATH="$WLD/share/aclocal"
