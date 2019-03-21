@@ -47,12 +47,12 @@ if [ "$OS" == "Ubuntu" ]; then
 
     sudo apt-get -y install  freerdp2-dev
     sudo apt-get -y install libxml2 libxml2-dev xcb-proto libxcb-glx0-dev 
-    sudo apt-get -y libx11-xcb-dev libxcb-dri2-0-dev libxcb-xfixes0-dev 
-    sudo apt-get -y wayland-protocols libwayland-dev libwayland-egl1-mesa 
-    sudo apt-get -y libxcb-composite0-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev 
-    sudo apt-get -y libcairo2-dev libpango1.0-dev libxkbcommon-dev libxcursor-dev 
+    sudo apt-get -y install libx11-xcb-dev libxcb-dri2-0-dev libxcb-xfixes0-dev 
+    sudo apt-get -y install wayland-protocols libwayland-dev libwayland-egl1-mesa 
+    sudo apt-get -y install libxcb-composite0-dev libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev 
+    sudo apt-get -y install libcairo2-dev libpango1.0-dev libxkbcommon-dev libxcursor-dev 
     sudo apt-get -y install libxcb-dri3-dev libxcb-present-dev libxcb-sync-dev libxshmfence-dev llvm-3.9-dev 
-    sudo apt-get -y ninja-build libinput-dev libjpeg-dev libwebp-dev
+    sudo apt-get -y install ninja-build libinput-dev libjpeg-dev libwebp-dev
     sudo apt-get -y install libglfw3-dev libgles2-mesa-dev libsystemd-dev libgbm-dev libva-dev
 
 
